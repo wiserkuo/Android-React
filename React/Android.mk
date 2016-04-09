@@ -6,7 +6,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := $(call all-java-files-under, src)
 
 LOCAL_PACKAGE_NAME := React
-LOCAL_CERTIFICATE := media
+#LOCAL_CERTIFICATE := media
 
 include $(BUILD_PACKAGE)
 
