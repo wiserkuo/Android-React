@@ -141,12 +141,14 @@ public class NumView extends View implements OnTouchListener {
     public boolean onTouch(View view, MotionEvent event) {
         // if(event.getAction() != MotionEvent.ACTION_DOWN)
         // return super.onTouchEvent(event);
-        if (!startFlag)return true;
+        if (!startFlag&&!(event.getAction()==MotionEvent.ACTION_DOWN))return true;
+
         P point = new P();
         point.x = event.getX();
         point.y = event.getY();
         points.add(point);
-        averageCount++;
+        Log.d(TAG, "onTouched: "+event.getX()+" "+event.getY());
+        /*averageCount++;
         if(averageCount==2){
             P ap=new P();
             for (P p : points) {
@@ -164,7 +166,7 @@ public class NumView extends View implements OnTouchListener {
             point.y=ap.y;
         }
         else 
-            return true;
+            return true;*/
         if(point.x>=0&&point.x<=grid*5&&point.y>=0&&point.y<=grid*5){
             numTouched=1+((int)point.y)/grid*5+(int)(point.x)/grid;
             if(lastTouched==numTouched);
