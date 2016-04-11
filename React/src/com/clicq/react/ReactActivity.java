@@ -24,9 +24,9 @@ public class ReactActivity extends Activity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set full screen view
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 //        numView = new NumView(this);
         setContentView(R.layout.main);
@@ -54,6 +54,7 @@ public class ReactActivity extends Activity implements OnClickListener {
                         startFlag=true;
                         csec=0;
                         startstop.setText("Stop");
+                        startstop.setEnabled(true);
                         new Thread(new Runnable(){
                             @Override
                             public void run() {
@@ -98,6 +99,7 @@ public class ReactActivity extends Activity implements OnClickListener {
                     else {
                         numView.initialize();
                         countDown=3;
+                        startstop.setEnabled(false);
                         new Thread(new Runnable(){
                             @Override
                             public void run() {

@@ -32,6 +32,7 @@ public class NumView extends View implements OnTouchListener {
     int nextNum =1;
     int lastTouched;
     boolean startFlag=false;
+    int averageCount=0;
     public NumView(Context context, AttributeSet attrs) {
         super(context,attrs);
         setFocusable(true);
@@ -44,7 +45,10 @@ public class NumView extends View implements OnTouchListener {
         display.getSize(size);
         width=size.x;
         height=size.y;
-        grid=size.x/7;
+        if(size.x<size.y)
+            grid=size.x/5;
+        else
+            grid=size.y/6;
         mHandler = new Handler(){
             int i = 0;
             @Override
@@ -85,7 +89,7 @@ public class NumView extends View implements OnTouchListener {
         nextNum=1;
         lastTouched=0;
         randomSeq();
-        invalidate();
+
     }
     public void stop(){
 
@@ -93,6 +97,7 @@ public class NumView extends View implements OnTouchListener {
     }
     public void start(){
         startFlag=true;
+        invalidate();
     }
     public boolean isFinished(){
 
@@ -111,20 +116,20 @@ public class NumView extends View implements OnTouchListener {
                 paint.setColor(Color.GREEN);
             else
                 paint.setColor(Color.RED);
-            canvas.drawRect(grid+(numTouched%5)*grid,grid+(numTouched/5)*grid,grid+(numTouched%5)*grid+grid,grid+(numTouched/5)*grid+grid,paint);
+            canvas.drawRect((numTouched%5)*grid,(numTouched/5)*grid,(numTouched%5)*grid+grid,(numTouched/5)*grid+grid,paint);
         }
         paint.setColor(Color.BLACK);
         //draw 5x5 
         for(int i=0;i<6;i++){
-              canvas.drawLine(grid+i*grid, grid,grid+i*grid,grid*6, paint);
-              canvas.drawLine(grid, grid+i*grid,grid*6,grid+i*grid, paint);
+              canvas.drawLine(i*grid, 0,i*grid,grid*5, paint);
+              canvas.drawLine(0, i*grid,grid*5,i*grid, paint);
         }
         //draw 1-25 text
         for(int i=0;i<25;i++){
             if(seq[i]<10)
-                canvas.drawText(""+seq[i], (float)(grid*1.4+(i%5)*grid), (float)(grid*1.7+(i/5)*grid) , paint);
+                canvas.drawText(""+seq[i], (float)(grid*0.4+(i%5)*grid), (float)(grid*0.7+(i/5)*grid) , paint);
             else
-                canvas.drawText(""+seq[i], (float)(grid*1.2+(i%5)*grid), (float)(grid*1.7+(i/5)*grid) , paint);
+                canvas.drawText(""+seq[i], (float)(grid*0.2+(i%5)*grid), (float)(grid*0.7+(i/5)*grid) , paint);
         }
         //draw touched point
         for (P point : points) {
@@ -141,8 +146,27 @@ public class NumView extends View implements OnTouchListener {
         point.x = event.getX();
         point.y = event.getY();
         points.add(point);
-        if(point.x>=grid&&point.x<=grid*6&&point.y>=grid&&point.y<=grid*6){
-            numTouched=1+((int)point.y-grid)/grid*5+(int)(point.x-grid)/grid;
+        averageCount++;
+        if(averageCount==2){
+            P ap=new P();
+            for (P p : points) {
+                //canvas.drawCircle(point.x, point.y, 3, paint);
+            // Log.d(TAG, "Painting: "+point);
+                ap.x+=p.x;
+                ap.y+=p.y;
+
+            }
+            ap.x=ap.x/2;
+            ap.y=ap.y/2;
+            points.clear();
+            averageCount=0;
+            point.x=ap.x;
+            point.y=ap.y;
+        }
+        else 
+            return true;
+        if(point.x>=0&&point.x<=grid*5&&point.y>=0&&point.y<=grid*5){
+            numTouched=1+((int)point.y)/grid*5+(int)(point.x)/grid;
             if(lastTouched==numTouched);
             new Thread(new Runnable(){
                 @Override
