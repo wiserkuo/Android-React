@@ -105,9 +105,6 @@ public class NumView extends View implements OnTouchListener {
     }
     @Override
     public void onDraw(Canvas canvas) {
-        Log.d(TAG,"onDraw");
-
-
         //draw GREEN touched mark
         if(numTouched>=1&&numTouched<=25&&!turnOn){
             Log.d(TAG,"onDraw touched nextNum="+nextNum+" numTouched-1="+(numTouched-1));
@@ -132,22 +129,32 @@ public class NumView extends View implements OnTouchListener {
                 canvas.drawText(""+seq[i], (float)(grid*0.2+(i%5)*grid), (float)(grid*0.7+(i/5)*grid) , paint);
         }
         //draw touched point
-        for (P point : points) {
+       /* for (P point : points) {
             canvas.drawCircle(point.x, point.y, 3, paint);
             // Log.d(TAG, "Painting: "+point);
-        }
+        }*/
     }
 
     public boolean onTouch(View view, MotionEvent event) {
         // if(event.getAction() != MotionEvent.ACTION_DOWN)
         // return super.onTouchEvent(event);
-        if (!startFlag&&!(event.getAction()==MotionEvent.ACTION_DOWN))return true;
+        switch(event.getAction()){
+
+            case MotionEvent.ACTION_DOWN:
+                Log.d(TAG, "onTouch Down: "+event.getX()+" "+event.getY());
+            break;
+            case MotionEvent.ACTION_UP:
+                Log.d(TAG, "onTouch Up: "+event.getX()+" "+event.getY());
+            break;
+
+        }
+        if (!startFlag||!(event.getAction()==MotionEvent.ACTION_DOWN))return true;
 
         P point = new P();
         point.x = event.getX();
         point.y = event.getY();
-        points.add(point);
-        Log.d(TAG, "onTouched: "+event.getX()+" "+event.getY());
+        //points.add(point);
+        
         /*averageCount++;
         if(averageCount==2){
             P ap=new P();
@@ -199,7 +206,7 @@ public class NumView extends View implements OnTouchListener {
             }).start();
             lastTouched=numTouched;
         }
-        Log.d(TAG, "point: " + point+" numTouched="+numTouched);
+      //  Log.d(TAG, "point: " + point+" numTouched="+numTouched);
         
         return true;
     }
